@@ -10,7 +10,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "mysql2": "^3.14.1",
     "node-notifier": "^10.0.1",
     "open": "^10.1.2"
+  },
+  "bin": {
+  "notificationAna": "notificationAna.js",
+  "notificationSergio": "notificationSergio.js"
+},
+  "pkg": {
+    "targets": [
+      "node18-win-x64"
+    ]
   }
 }
