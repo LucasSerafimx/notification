@@ -26,23 +26,24 @@ async function verificarSolicitacoes() {
     // Executa a query
     const [rows] = await connection.execute(`
       select b.tickets_id,
-             a.name,
-             CASE a.status
-                WHEN 1 THEN 'Novo'
-                WHEN 2 THEN 'Em andamento (atribuído)'
-                WHEN 3 THEN 'Em andamento (planejado)'
-                WHEN 4 THEN 'Pendente'
-                WHEN 5 THEN 'Resolvido'
-                WHEN 6 THEN 'Fechado'
-                ELSE 'Desconhecido'
-             END AS status_descricao,
-             b.users_id_validate,
-             c.name
-      from glpi_tickets a, glpi_ticketvalidations b, glpi_users c
-      where a.id = b.tickets_id
-        and b.users_id_validate = c.id
-        and a.status = 2
-        and b.users_id_validate = 9;
+	   a.name,
+	   CASE a.status
+	   	WHEN 1 THEN 'Novo'
+	   	WHEN 2 THEN 'Em andamento (atribuído)'
+    	WHEN 3 THEN 'Em andamento (planejado)'
+    	WHEN 4 THEN 'Pendente'
+    	WHEN 5 THEN 'Resolvido'
+    	WHEN 6 THEN 'Fechado'
+    	ELSE 'Desconhecido'
+  	   END AS status_descricao,
+  	   b.users_id_validate,
+  	   c.name
+from glpi_tickets a,glpi_ticketvalidations b,glpi_users c
+where a.id = b.tickets_id
+and b.users_id_validate  = c.id
+and a.status = 2
+and b.validation_date IS NULL
+and b.users_id_validate = 9; 
     `);
 
     const totalSolicitacoes = rows.length;

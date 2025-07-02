@@ -20,29 +20,30 @@ async function verificarSolicitacoes() {
       host: "192.168.0.17",
       user: "connectdl",
       password: "123456",
-      database: "glpi10"
+      database: "glpi10",
     });
 
     // Executa a query
     const [rows] = await connection.execute(`
       select b.tickets_id,
-             a.name,
-             CASE a.status
-                WHEN 1 THEN 'Novo'
-                WHEN 2 THEN 'Em andamento (atribuído)'
-                WHEN 3 THEN 'Em andamento (planejado)'
-                WHEN 4 THEN 'Pendente'
-                WHEN 5 THEN 'Resolvido'
-                WHEN 6 THEN 'Fechado'
-                ELSE 'Desconhecido'
-             END AS status_descricao,
-             b.users_id_validate,
-             c.name
-      from glpi_tickets a, glpi_ticketvalidations b, glpi_users c
-      where a.id = b.tickets_id
-        and b.users_id_validate = c.id
-        and a.status = 2
-        and b.users_id_validate = 8;
+	   a.name,
+	   CASE a.status
+	   	WHEN 1 THEN 'Novo'
+	   	WHEN 2 THEN 'Em andamento (atribuído)'
+    	WHEN 3 THEN 'Em andamento (planejado)'
+    	WHEN 4 THEN 'Pendente'
+    	WHEN 5 THEN 'Resolvido'
+    	WHEN 6 THEN 'Fechado'
+    	ELSE 'Desconhecido'
+  	   END AS status_descricao,
+  	   b.users_id_validate,
+  	   c.name
+from glpi_tickets a,glpi_ticketvalidations b,glpi_users c
+where a.id = b.tickets_id
+and b.users_id_validate  = c.id
+and a.status = 2
+and b.validation_date IS NULL
+and b.users_id_validate = 8;
     `);
 
     const totalSolicitacoes = rows.length;
@@ -62,13 +63,13 @@ async function verificarSolicitacoes() {
         message: mensagem,
         sound: true,
         icon: iconPath,
-        timeout: 10
+        timeout: 10,
         // wait: true,
       });
 
       notifier.on("click", () => {
         // Link para GLPI ou página desejada
-        open("http://mp.uniforca.com.br/front/central.php"); 
+        open("http://mp.uniforca.com.br/front/central.php");
       });
 
       notifier.on("timeout", () => {
@@ -77,7 +78,6 @@ async function verificarSolicitacoes() {
     } else {
       console.log("Nenhuma solicitação aberta no momento.");
     }
-
   } catch (err) {
     console.error("Erro ao verificar solicitações:", err);
   } finally {
