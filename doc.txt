@@ -1,0 +1,5 @@
+comando para gerar o .exe com cmd 
+  pyinstaller --onefile --add-data "download.ico;." notificationTeste.py
+
+Comando sem CMD
+  pyinstaller --onefile --noconsole --add-data "download.ico;." notificationTeste.py
